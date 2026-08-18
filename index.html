@@ -31,8 +31,13 @@
     src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260328_065045_c44942da-53c6-4804-b734-f9e07fc22e08.mp4">
   </video>
   <div class="hero-blur"></div>
+  <div class="beams" aria-hidden="true"></div>
+  <div class="hero-grid" aria-hidden="true"></div>
   <div class="hero-inner">
-    <h1>Precision parts, <span class="grad">on spec, on time</span></h1>
+    <h1>
+      <span class="line"><span class="w"><span class="c">Precision</span></span> <span class="w"><span class="c">parts,</span></span></span>
+      <span class="line"><span class="w"><span class="c grad">on</span></span> <span class="w"><span class="c grad">spec,</span></span> <span class="w"><span class="c grad">on</span></span> <span class="w"><span class="c grad">time</span></span></span>
+    </h1>
     <p class="sub">CNC milling, turning and finishing for OEMs and startups — from one prototype to full production runs, measured, documented and shipped on schedule.</p>
     <div class="cta-row">
       <a class="btn primary" href="contact.html">Request a quote</a>
@@ -65,10 +70,10 @@
 <section style="padding-top:56px">
   <div class="wrap">
     <div class="stats">
-      <div class="stat"><div class="v">±0.005 mm</div><p>standard tolerance capability</p></div>
-      <div class="stat"><div class="v">24 h</div><p>DFM feedback on new parts</p></div>
-      <div class="stat"><div class="v">1 pc</div><p>minimum order quantity</p></div>
-      <div class="stat"><div class="v">98.7%</div><p>on-time delivery, last 12 months</p></div>
+      <div class="stat reveal"><div class="v">±0.005 mm</div><p>standard tolerance capability</p></div>
+      <div class="stat reveal"><div class="v"><span class="count" data-count="24">0</span> h</div><p>DFM feedback on new parts</p></div>
+      <div class="stat reveal"><div class="v"><span class="count" data-count="1">0</span> pc</div><p>minimum order quantity</p></div>
+      <div class="stat reveal"><div class="v"><span class="count" data-count="98.7">0</span>%</div><p>on-time delivery, last 12 months</p></div>
     </div>
   </div>
 </section>
@@ -81,7 +86,7 @@
       <p>Machining, finishing, assembly and inspection under one roof, so you never juggle five vendors for one component.</p>
     </div>
     <div class="grid-3">
-      <div class="cap">
+      <div class="cap reveal">
         <div class="photo"><img src="img/cnc.jpg" alt="CNC machine row in the FABRIK workshop"></div>
         <div class="body">
           <div class="n">01 / MILLING</div>
@@ -89,7 +94,7 @@
           <p>Complex geometries, tight pockets and fine finishes across aluminium, stainless, titanium and engineering plastics.</p>
         </div>
       </div>
-      <div class="cap">
+      <div class="cap reveal">
         <div class="photo"><img src="img/parts.jpg" alt="Precision machined metal parts"></div>
         <div class="body">
           <div class="n">02 / TURNING</div>
@@ -97,7 +102,7 @@
           <p>Shafts, sleeves and small precision parts to ±0.005 mm with live tooling for secondary operations in one setup.</p>
         </div>
       </div>
-      <div class="cap">
+      <div class="cap reveal">
         <div class="photo"><img src="img/workshop.jpg" alt="Engineer inspecting a machined part"></div>
         <div class="body">
           <div class="n">03 / FINISHING</div>
@@ -180,6 +185,7 @@
   </div>
 </footer>
 
+<script src="beams.js"></script>
 <script>
   (function () {
     var video = document.getElementById('heroVideo');
@@ -218,6 +224,52 @@
     entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
   }, { threshold: 0.08 });
   document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+
+  (function () {
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!reduced) {
+      document.querySelectorAll('.hero .c').forEach(function (c, i) {
+        c.style.animationDelay = (0.2 + i * 0.08) + 's';
+      });
+      var cio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          e.target.classList.add('in');
+          cio.unobserve(e.target);
+          var el = e.target, target = parseFloat(el.dataset.count), decimals = (el.dataset.count.split('.')[1] || '').length, t0 = null;
+          function step(ts) {
+            if (!t0) t0 = ts;
+            var p = Math.min((ts - t0) / 1500, 1);
+            var eased = 1 - Math.pow(2, -10 * p);
+            el.textContent = (target * eased).toFixed(decimals);
+            if (p < 1) requestAnimationFrame(step);
+          }
+          requestAnimationFrame(step);
+        });
+      }, { threshold: 0.4 });
+      document.querySelectorAll('.count').forEach(function (el) { cio.observe(el); });
+    } else {
+      document.querySelectorAll('.count').forEach(function (el) { el.textContent = el.dataset.count; });
+    }
+
+    if (!reduced && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      document.querySelectorAll('.cap').forEach(function (card) {
+        var raf = null;
+        card.addEventListener('mousemove', function (ev) {
+          if (raf) return;
+          raf = requestAnimationFrame(function () {
+            raf = null;
+            var r = card.getBoundingClientRect();
+            var px = (ev.clientX - r.left) / r.width - 0.5;
+            var py = (ev.clientY - r.top) / r.height - 0.5;
+            card.style.transform = 'perspective(900px) rotateX(' + (-py * 4).toFixed(2) + 'deg) rotateY(' + (px * 6).toFixed(2) + 'deg) translateY(-3px)';
+          });
+        }, { passive: true });
+        card.addEventListener('mouseleave', function () { card.style.transform = ''; });
+      });
+    }
+  })();
 </script>
 </body>
 </html>
