@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — FABRIK Precision</title>
+<meta name="description" content="Request a quote from FABRIK Precision: send drawings, quantities and target dates for a 24-hour quote.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='10' fill='%2316222e'/><path d='M16 48 32 12l16 36' fill='none' stroke='%236ea8e5' stroke-width='4'/><circle cx='32' cy='36' r='5' fill='%236ea8e5'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="index.html"><span class="sq">F</span>FABRIK PRECISION</a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="capabilities.html">Capabilities</a>
+    <a href="process.html">Process</a>
+    <a href="contact.html" class="active">Contact</a>
+    <a class="nav-cta" href="mailto:2096243628@qq.com">Email us</a>
+  </div>
+</nav>
+
+<header class="page-hero">
+  <div class="wrap">
+    <div class="kicker">Request a quote</div>
+    <h1>Send us your drawings</h1>
+    <p>STEP / STP files, quantities and a target date. A DFM note and itemized quote follow within 24 hours.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <form class="form" onsubmit="return sendMail(event)">
+      <div class="row">
+        <label>Your name <input type="text" id="n" required placeholder="Name"></label>
+        <label>Company <input type="text" id="c" placeholder="Company (optional)"></label>
+      </div>
+      <label>Your email <input type="email" id="e" required placeholder="you@example.com"></label>
+      <div class="row">
+        <label>Quantity <input type="text" id="q" placeholder="e.g. 500 pcs"></label>
+        <label>Material
+          <select id="m">
+            <option>Aluminium 6061 / 7075</option>
+            <option>Stainless 303 / 304 / 316</option>
+            <option>Titanium</option>
+            <option>Brass / copper</option>
+            <option>POM / PEEK</option>
+            <option>Not sure, advise me</option>
+          </select>
+        </label>
+      </div>
+      <label>Part details
+        <textarea id="d" required placeholder="Describe the part, key tolerances, finish, target date. Attach STEP files by email if you have them."></textarea>
+      </label>
+      <button class="btn" type="submit">Send request</button>
+      <p style="color:var(--muted);font-size:13px">Opens your email app with everything prefilled. Files can be attached in the email. Direct: 2096243628@qq.com</p>
+    </form>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="contact-block">
+      <div class="kicker">FABRIK Precision</div>
+      <h2>One email, one clear answer</h2>
+      <p>DFM feedback is free. Quoting is fast. No obligation until you approve the quote.</p>
+      <a class="btn" href="mailto:2096243628@qq.com">2096243628@qq.com</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>© 2026 FABRIK Precision · CNC machining &amp; contract manufacturing</div>
+    <div><a href="index.html">Home</a> · <a href="capabilities.html">Capabilities</a> · <a href="process.html">Process</a> · <a href="contact.html">Contact</a> · <a href="mailto:2096243628@qq.com">2096243628@qq.com</a></div>
+  </div>
+</footer>
+
+<script>
+function sendMail(ev) {
+  ev.preventDefault();
+  var n = document.getElementById('n').value;
+  var c = document.getElementById('c').value;
+  var e = document.getElementById('e').value;
+  var q = document.getElementById('q').value;
+  var m = document.getElementById('m').value;
+  var d = document.getElementById('d').value;
+  var body = encodeURIComponent('Name: ' + n + '\nCompany: ' + c + '\nEmail: ' + e + '\nQuantity: ' + q + '\nMaterial: ' + m + '\n\nDetails:\n' + d);
+  window.location.href = 'mailto:2096243628@qq.com?subject=' + encodeURIComponent('FABRIK quote request - ' + q) + '&body=' + body;
+  return false;
+}
+</script>
+</body>
+</html>
